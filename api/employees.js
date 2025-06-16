@@ -9,9 +9,19 @@ export default router;
 
 import employees from "#db/employees";
 
-router.route("/").get((req, res) => {
-  res.send(employees);
-});
+router
+  .route("/")
+  .get((req, res) => {
+    res.send(employees);
+  })
+  .post((req, res) => {
+    if (!req.body) return res.status(400).send("Request body is required.");
+    const { name } = req.body;
+    if (!name) return res.status(400).send("Please include a name.");
+    const employee = { id: employees.length + 1, name };
+    employees.push(employee);
+    res.status(201).send(employee);
+  });
 
 router.route("/random").get((req, res) => {
   const randomIndex = Math.floor(Math.random() * employees.length);
